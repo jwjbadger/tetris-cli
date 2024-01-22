@@ -2,7 +2,7 @@
 #include <ftxui/dom/elements.hpp>  // for canvas, Element, separator, hbox, operator|, border
 #include <ftxui/screen/screen.hpp>  // for Pixel
 #include <memory>   // for allocator, shared_ptr, __shared_ptr_access
-#include <string>   // for string, basic_string
+#include <string>   // for string, basic_string<
 #include <utility>  // for move
 #include <vector>   // for vector, __alloc_traits<>::value_type
  
@@ -60,6 +60,22 @@ void drawGameBlocks(int arr[][10], Canvas &canvas) {
         }
     }
 }
+bool pieceHasRoom(struct Shape block, int atOrigin[2], int game[][10]) {
+    int start_x = atOrigin[0];
+    int y = 0;
+    // loop over block pieces, adding 1 to x and checking if game board is empty at all locs which include a 1
+    // calculate size of of 
+
+    for (int x = 0; x < 4; x++) { // probably, check size of array
+        if (block.shape[y][x] == 1 && game[atOrigin[1]][x+start_x] != 0)
+            return false;
+        if (block.shape[y][x] == 1 && (start_x+x > 10 || start_x+x < 0)) // out of bounds
+            return false;
+    }
+
+    return true;
+}
+
 
 void renderPlayerPiece(Canvas &canvas, struct Shape block, int origin[2]) {
     // calculate origin based on block origin
@@ -97,7 +113,8 @@ int main() {
             pieceLoc[0]--;
             return true;
         } else if (event == Event::ArrowRight) {
-            pieceLoc[0]++;
+            if (pieceHasRoom(O_BLOCK, pieceLoc, gameArray))
+                pieceLoc[0]++;
             return true;
         }
         return false;
