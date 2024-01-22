@@ -97,7 +97,7 @@ class CoolCanvas : public Canvas {
             for (int y = 0; y < 20; y++) {
                 for (int x = 0; x < 10; x++) {
                     if (arr[y][x] != 0)
-                        filledBlock(x*10, y*10, 9, colors[arr[y][x]-1]);
+                        filledBlock(x*10, y*10, 8, colors[arr[y][x]-1]);
                 }
             }
         }
@@ -149,14 +149,22 @@ int main() {
     int gameArray[20][10] = {1};
     int frames = 0;
     int score = 0;
+    int menu = 0;
     int gameSpeed = 60;
 
     struct Shape currentShape = randomShape();
     auto screen = ScreenInteractive::FitComponent();
 
-    auto c = CoolCanvas(102, 202);
+    auto c = CoolCanvas(100, 200);
 
-    auto game_f = Renderer([&] {
+    std::vector<std::string> menu_entries = {"Tetris", "Options", "Credits"};
+
+    auto radiobox = Menu(&menu_entries, &menu, MenuOption::Horizontal());
+
+
+    auto game_f = Renderer(radiobox, [&] {
+
+        if (menu != 0) return hbox({text("OPTIONS")});
         if (!pieceHasRoom(currentShape, pieceLoc, gameArray)) {
             pieceLoc[1]--;
             dropBlock(currentShape, pieceLoc, gameArray);
@@ -200,7 +208,9 @@ int main() {
     });    
     auto component_renderer = Renderer(game_f, [&] {
         return vbox({
-            text("SCORE: " + std::to_string(score)),
+            separatorLight(),
+            radiobox->Render() | frame | flex | center,
+            separatorLight() | flex,
             game_f->Render(),
         });
     });
