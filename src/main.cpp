@@ -19,26 +19,203 @@
 #include <bits/stdc++.h> 
 
 using namespace ftxui;
-
 struct Shape {
-    int shape[3][4];
-    int origin[2];
+    int shape[4][4][4];
     int id;
-    int rot = 0;
-
-    void rotate() {
-        system("kys");
-    }
+    int rot=0;
 };
 
-struct Shape T_BLOCK = { {{0,1,0,0}, {1,1,1,0}}, {2, 2}, 1}; // can i just hard code the rotations pls
-struct Shape O_BLOCK = { {{0,1,1,0}, {0,1,1,0}}, {2, 2}, 2};
-struct Shape I_BLOCK = { {{0}, {1,1,1,1}}, {1, 2}, 3};
-struct Shape S_BLOCK = { {{0,1,1,0}, {0,0,1,1}}, {1, 3}, 4};
-Color colors[4] = {Color::Orange1, Color::Yellow1, Color::SkyBlue1, Color::Red};
-struct Shape SHAPES[4] = {T_BLOCK, O_BLOCK, I_BLOCK, S_BLOCK};
+struct Shape T_BLOCK = { { 
+    {
+        {0},
+        {1, 1, 1, 0},
+        {0, 1, 0, 0},
+        {0}
+    },
+    {
+        {0, 0, 1, 0},
+        {0, 1, 1, 0},
+        {0, 0, 1, 0},
+        {0}
+    },
+    {
+        {0, 1, 0, 0},
+        {1, 1, 1, 0},
+        {0, 0, 0, 0},
+        {0}
+    },
+    {
+        {1, 0, 0, 0},
+        {1, 1, 0, 0},
+        {1, 0, 0, 0},
+        {0}
+    }
+}, 1}; 
+struct Shape O_BLOCK {
+    {
+        {
+            {0},
+            {0, 1, 1, 0},
+            {0, 1, 1, 0},
+            {0}
+        },
+        {
+            {0},
+            {0, 1, 1, 0},
+            {0, 1, 1, 0},
+            {0}
+        },
+        {
+            {0},
+            {0, 1, 1, 0},
+            {0, 1, 1, 0},
+            {0}
+        },
+        {
+            {0},
+            {0, 1, 1, 0},
+            {0, 1, 1, 0},
+            {0}
+        }
+    }, 2
+};
+struct Shape I_BLOCK { { 
+    {
+        {0, 1},
+        {0, 1},
+        {0, 1},
+        {0, 1}
+    },
+    {
+        {0},
+        {1, 1, 1, 1},
+        {0},
+        {0}
+    },
+    {
+        {0, 1},
+        {0, 1},
+        {0, 1},
+        {0, 1}
+    },
+    {
+        {0},
+        {1, 1, 1, 1},
+        {0},
+        {0}
+    }
+}, 3};
+struct Shape S_BLOCK = { {
+    {
+        {0},
+        {0, 1, 1, 0},
+        {1, 1, 0, 0},
+        {0}
+    },
+    {
+        {1, 0, 0, 0},
+        {1, 1, 0, 0},
+        {0, 1, 0, 0},
+        {0}
+    },
+    {
+        {0},
+        {0, 1, 1, 0},
+        {1, 1, 0, 0},
+        {0}
+    },
+    {
+        {1, 0, 0, 0},
+        {1, 1, 0, 0},
+        {0, 1, 0, 0},
+        {0}
+    }
+}, 4};
+
+struct Shape Z_BLOCK = { {
+    {
+        {0},
+        {1, 1, 0, 0},
+        {0, 1, 1, 0},
+        {0}
+    },
+    {
+        {0, 1, 0, 0},
+        {1, 1, 0, 0},
+        {1, 0, 0, 0},
+        {0}
+    },
+    {
+        {0},
+        {1, 1, 0, 0},
+        {0, 1, 1, 0},
+        {0}
+    },
+    {
+        {0, 1, 0, 0},
+        {1, 1, 0, 0},
+        {1, 0, 0, 0},
+        {0}
+    }
+}, 5};
+
+struct Shape L_BLOCK = { {
+    {
+        {0},
+        {0, 1, 1, 0},
+        {0, 0, 1, 0},
+        {0, 0, 1, 0},
+    },
+    {
+        {0},
+        {0, 0, 1, 0},
+        {1, 1, 1, 0},
+        {0}
+    },
+    {
+        {1, 0, 0, 0},
+        {1, 0, 0, 0},
+        {1, 1, 0, 0},
+        {0}
+    },
+    {
+        {0},
+        {1, 1, 1, 0},
+        {1, 0, 0, 0},
+        {0}
+    }
+}, 6};
+struct Shape J_BLOCK = { {
+    {
+        {0},
+        {0, 1, 1, 0},
+        {0, 1, 0, 0},
+        {0, 1, 0, 0},
+    },
+    {
+        {0},
+        {1, 0, 0, 0},
+        {1, 1, 1, 0},
+        {0}
+    },
+    {
+        {0, 1, 0, 0},
+        {0, 1, 0, 0},
+        {1, 1, 0, 0},
+        {0}
+    },
+    {
+        {0},
+        {1, 1, 1, 0},
+        {0, 0, 1, 0},
+        {0}
+    }
+}, 7};
+
+Color colors[7] = {Color::Purple, Color::Yellow1, Color::SkyBlue1, Color::Red, Color::LightGreen, Color::DarkOrange, Color::DarkBlue};
+struct Shape SHAPES[7] = {T_BLOCK, I_BLOCK, S_BLOCK, O_BLOCK, Z_BLOCK, L_BLOCK, J_BLOCK};
 struct Shape randomShape() {
-    return SHAPES[rand() % 4];
+    return SHAPES[rand() % 7];
 }
 
 class CoolCanvas : public Canvas {
@@ -89,7 +266,7 @@ class CoolCanvas : public Canvas {
         void drawBlocks() {
             for (int y = 0; y < 20; y++) {
                 for (int x = 0; x < 10; x++) 
-                    filledBlock(x*10, y*10, 9, Color::Black);
+                    filledBlock(x*10, y*10, 8, Color::Grey0);
             }
         }
 
@@ -106,9 +283,9 @@ class CoolCanvas : public Canvas {
             int piece_x = origin[0]*10;
             int piece_y = origin[1]*10;
             for (int x = 0; x < 4; x++) {
-                for(int y = 0; y < 2; y++) {
-                    if (block.shape[y][x] != 0) {
-                        filledBlock(piece_x+x*10, piece_y+y*10, 9, Color::Purple3);
+                for(int y = 0; y < 4; y++) {
+                    if (block.shape[block.rot%4][y][x] != 0) {
+                        filledBlock(piece_x+x*10, piece_y+y*10, 8, colors[block.id-1]);
                     }
                 }
             }
@@ -119,13 +296,11 @@ class CoolCanvas : public Canvas {
 
 bool pieceHasRoom(struct Shape block, int atOrigin[2], int game[][10]) {
     int start_x = atOrigin[0];
-    for (int y = 0; y < 2; y++) {
+    for (int y = 0; y < 4; y++) {
         for (int x = 0; x < 4; x++) {
-            if (block.shape[y][x] == 1 && game[atOrigin[1]+y][x+start_x] != 0)
+            if (block.shape[block.rot%4][y][x] == 1 && (game[atOrigin[1]+y][x+start_x] != 0 || atOrigin[1]+y > 19) )
                 return false;
-            if (atOrigin[1]+y > 19)
-                return false;
-            if (block.shape[y][x] == 1 && (start_x+x > 9 || start_x+x < 0)) 
+            if (block.shape[block.rot%4][y][x] == 1 && (start_x+x > 9 || start_x+x < 0)) 
                 return false;
         }
     }
@@ -134,9 +309,9 @@ bool pieceHasRoom(struct Shape block, int atOrigin[2], int game[][10]) {
 }
 
 void dropBlock(struct Shape block, int spot[2], int game[][10]) {
-    for (int y = 0; y < 2; y++) {
+    for (int y = 0; y < 4; y++) {
         for (int x = 0; x < 4; x++) {
-            if (block.shape[y][x] == 1)
+            if (block.shape[block.rot%4][y][x] == 1)
                 game[y+spot[1]][x+spot[0]] = block.id;
         }
     }
@@ -161,10 +336,14 @@ int main() {
 
     auto radiobox = Menu(&menu_entries, &menu, MenuOption::Horizontal());
 
+    auto credits = vbox({
+        text("that sum' for loop - titty\n") | bold,
+        text("holding the L - @knob"),
+    });
 
     auto game_f = Renderer(radiobox, [&] {
 
-        if (menu != 0) return hbox({text("OPTIONS")});
+        if (menu != 0) return credits;
         if (!pieceHasRoom(currentShape, pieceLoc, gameArray)) {
             pieceLoc[1]--;
             dropBlock(currentShape, pieceLoc, gameArray);
@@ -189,7 +368,7 @@ int main() {
         return canvas(std::move(c));
 
     }) | CatchEvent([&](Event event) {
-
+        if (menu != 0) return false;
         if (event == Event::ArrowDown) {
             frames=gameSpeed;
             return true;
@@ -203,9 +382,19 @@ int main() {
             if (!pieceHasRoom(currentShape, pieceLoc, gameArray))
                 pieceLoc[0]--;
             return true;
+        } else if (event == Event::ArrowUp) {
+            while (pieceHasRoom(currentShape, pieceLoc, gameArray))
+                pieceLoc[1]++;
+            pieceLoc[1]--;
+            frames=gameSpeed;
+        } else if (event == Event::Character('r')) {
+            currentShape.rot++;
+            if (!pieceHasRoom(currentShape, pieceLoc, gameArray))
+            currentShape.rot--;
         }
         return false;
     });    
+    
     auto component_renderer = Renderer(game_f, [&] {
         return vbox({
             separatorLight(),
