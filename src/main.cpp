@@ -1,22 +1,20 @@
-
-#include <ftxui/dom/elements.hpp>  // for canvas, Element, separator, hbox, operator|, border
-#include <ftxui/screen/screen.hpp>  // for Pixel
-#include <memory>   // for allocator, shared_ptr, __shared_ptr_access
-#include <string>   // for string, basic_string<
-#include <utility>  // for move
-#include <vector>   // for vector, __alloc_traits<>::value_type
+/**
+ * this is a project i started to learn c++ and the FTXUI library
+*/
+#include <ftxui/dom/elements.hpp> 
+#include <ftxui/screen/screen.hpp>  
+#include <string>   
+#include <utility> 
+#include <vector>   
 #include <random>
-
-#include "ftxui/component/captured_mouse.hpp"  // for ftxui
-#include "ftxui/component/component.hpp"  // for Renderer, CatchEvent, Horizontal, Menu, Tab
-#include "ftxui/component/component_base.hpp"      // for ComponentBase
-#include "ftxui/component/event.hpp"               // for Event
-#include "ftxui/component/mouse.hpp"               // for Mouse
-#include "ftxui/component/screen_interactive.hpp"  // for ScreenInteractive
-#include "ftxui/dom/canvas.hpp"                    // for Canvas
-#include "ftxui/screen/color.hpp"  // for Color, Color::Red, Color::Blue, Color::Green, ftxui
-
-#include <bits/stdc++.h> 
+#include "ftxui/component/captured_mouse.hpp" 
+#include "ftxui/component/component.hpp"  
+#include "ftxui/component/component_base.hpp" 
+#include "ftxui/component/event.hpp"
+#include "ftxui/component/mouse.hpp"
+#include "ftxui/component/screen_interactive.hpp"
+#include "ftxui/dom/canvas.hpp"
+#include "ftxui/screen/color.hpp" 
 
 using namespace ftxui;
 struct Shape {
@@ -27,102 +25,102 @@ struct Shape {
 
 struct Shape T_BLOCK = { { 
     {
+        {0, 1, 0, 0},
+        {1, 1, 1, 0},
         {0},
-        {1, 1, 1, 0},
-        {0, 1, 0, 0},
         {0}
     },
     {
-        {0, 0, 1, 0},
+        {0, 1, 0, 0},
         {0, 1, 1, 0},
-        {0, 0, 1, 0},
+        {0, 1, 0, 0},
+        {0}
+    },
+    {
+        {0, 0, 0, 0},
+        {1, 1, 1, 0},
+        {0, 1, 0, 0},
         {0}
     },
     {
         {0, 1, 0, 0},
-        {1, 1, 1, 0},
-        {0, 0, 0, 0},
-        {0}
-    },
-    {
-        {1, 0, 0, 0},
         {1, 1, 0, 0},
-        {1, 0, 0, 0},
+        {0, 1, 0, 0},
         {0}
     }
 }, 1}; 
 struct Shape O_BLOCK {
     {
         {
+            {0, 1, 1, 0},
+            {0, 1, 1, 0},
             {0},
-            {0, 1, 1, 0},
-            {0, 1, 1, 0},
             {0}
         },
         {
+            {0, 1, 1, 0},
+            {0, 1, 1, 0},
             {0},
-            {0, 1, 1, 0},
-            {0, 1, 1, 0},
             {0}
         },
         {
+            {0, 1, 1, 0},
+            {0, 1, 1, 0},
             {0},
-            {0, 1, 1, 0},
-            {0, 1, 1, 0},
             {0}
         },
         {
+            {0, 1, 1, 0},
+            {0, 1, 1, 0},
             {0},
-            {0, 1, 1, 0},
-            {0, 1, 1, 0},
             {0}
         }
     }, 2
 };
 struct Shape I_BLOCK { { 
     {
-        {0, 1},
-        {0, 1},
-        {0, 1},
-        {0, 1}
-    },
-    {
         {0},
         {1, 1, 1, 1},
         {0},
         {0}
     },
     {
-        {0, 1},
-        {0, 1},
-        {0, 1},
-        {0, 1}
+        {0, 0, 1},
+        {0, 0, 1},
+        {0, 0, 1},
+        {0, 0, 1}
     },
     {
         {0},
-        {1, 1, 1, 1},
         {0},
+        {1, 1, 1, 1},
         {0}
+    },
+    {
+        {0, 1},
+        {0, 1, 0, 0},
+        {0, 1},
+        {0, 1}
     }
 }, 3};
 struct Shape S_BLOCK = { {
     {
-        {0},
         {0, 1, 1, 0},
         {1, 1, 0, 0},
+        {0},
         {0}
     },
     {
-        {1, 0, 0, 0},
-        {1, 1, 0, 0},
         {0, 1, 0, 0},
+        {0, 1, 1, 0},
+        {0, 0, 1, 0},
         {0}
     },
     {
         {0},
+        {0},
         {0, 1, 1, 0},
         {1, 1, 0, 0},
-        {0}
     },
     {
         {1, 0, 0, 0},
@@ -134,22 +132,22 @@ struct Shape S_BLOCK = { {
 
 struct Shape Z_BLOCK = { {
     {
-        {0},
         {1, 1, 0, 0},
         {0, 1, 1, 0},
+        {0},
         {0}
     },
     {
+        {0, 0, 1, 0},
+        {0, 1, 1, 0},
         {0, 1, 0, 0},
-        {1, 1, 0, 0},
-        {1, 0, 0, 0},
         {0}
     },
     {
         {0},
+        {0},
         {1, 1, 0, 0},
         {0, 1, 1, 0},
-        {0}
     },
     {
         {0, 1, 0, 0},
@@ -162,52 +160,52 @@ struct Shape Z_BLOCK = { {
 struct Shape L_BLOCK = { {
     {
         {0},
-        {0, 1, 1, 0},
-        {0, 0, 1, 0},
-        {0, 0, 1, 0},
-    },
-    {
-        {0},
         {0, 0, 1, 0},
         {1, 1, 1, 0},
-        {0}
+        {0},
     },
     {
-        {1, 0, 0, 0},
-        {1, 0, 0, 0},
-        {1, 1, 0, 0},
-        {0}
+        {0, 1},
+        {0, 1},
+        {0, 1, 1},
+        {0},
     },
     {
         {0},
         {1, 1, 1, 0},
         {1, 0, 0, 0},
-        {0}
+        {0},
+    },
+    {
+        {1, 1},
+        {0, 1},
+        {0, 1},
+        {0},
     }
 }, 6};
 struct Shape J_BLOCK = { {
     {
-        {0},
-        {0, 1, 1, 0},
-        {0, 1, 0, 0},
-        {0, 1, 0, 0},
-    },
-    {
-        {0},
-        {1, 0, 0, 0},
+        {1},
         {1, 1, 1, 0},
-        {0}
+        {0},
+        {0},
     },
     {
-        {0, 1, 0, 0},
-        {0, 1, 0, 0},
-        {1, 1, 0, 0},
+        {0, 1, 1},
+        {0, 1},
+        {0, 1},
         {0}
     },
     {
         {0},
-        {1, 1, 1, 0},
-        {0, 0, 1, 0},
+        {1, 1, 1},
+        {0, 0, 1},
+        {0}
+    },
+    {
+        {0, 1},
+        {0, 1},
+        {1, 1},
         {0}
     }
 }, 7};
@@ -225,14 +223,11 @@ class CoolCanvas : public Canvas {
 
         }
         void drawGrid(int8_t sizex, int8_t sizey, int8_t x, int8_t y) {
-            int xAxis = 0;
-            int yAxis = 0;
             int xinc = sizex/x;
-            int yinc = sizey/y;
-            for (xAxis; xAxis <= x; xAxis++) { // draw one more to finish box;
+            for (int xAxis = 0; xAxis <= x; xAxis++) {
                 DrawPointLine(xinc*xAxis, 0, xinc*xAxis, 200, Color::Gold1);
             }
-            for (yAxis; yAxis <= y; yAxis++) {
+            for (int yAxis = 0; yAxis <= y; yAxis++) {
                 DrawPointLine(0, yAxis*10, 100, yAxis*10, Color::Red);
             }
         }
@@ -266,7 +261,7 @@ class CoolCanvas : public Canvas {
         void drawBlocks() {
             for (int y = 0; y < 20; y++) {
                 for (int x = 0; x < 10; x++) 
-                    filledBlock(x*10, y*10, 8, Color::Grey0);
+                    filledBlock(x*10, y*10, 8, Color::GrayDark);
             }
         }
 
@@ -298,62 +293,84 @@ bool pieceHasRoom(struct Shape block, int atOrigin[2], int game[][10]) {
     int start_x = atOrigin[0];
     for (int y = 0; y < 4; y++) {
         for (int x = 0; x < 4; x++) {
+            if (atOrigin[1]+y < 0) {
+                continue;
+            }
             if (block.shape[block.rot%4][y][x] == 1 && (game[atOrigin[1]+y][x+start_x] != 0 || atOrigin[1]+y > 19) )
                 return false;
             if (block.shape[block.rot%4][y][x] == 1 && (start_x+x > 9 || start_x+x < 0)) 
                 return false;
         }
     }
-
     return true;
 }
 
-void dropBlock(struct Shape block, int spot[2], int game[][10]) {
+bool dropBlock(struct Shape block, int spot[2], int game[][10]) {
     for (int y = 0; y < 4; y++) {
         for (int x = 0; x < 4; x++) {
-            if (block.shape[block.rot%4][y][x] == 1)
+            if (block.shape[block.rot%4][y][x] == 1) {
+                if (y+spot[1] < 1) return false;
                 game[y+spot[1]][x+spot[0]] = block.id;
+            }
         }
     }
+
+    return true;
 }
 
 
 
 int main() {
     int pieceLoc[2] = {5, 0};
-    int gameArray[20][10] = {1};
+    int gameArray[20][10] = {0};
     int frames = 0;
+    int dropped = 0;
     int score = 0;
     int menu = 0;
-    int gameSpeed = 60;
+    int gameSpeed = 30;
 
     struct Shape currentShape = randomShape();
     auto screen = ScreenInteractive::FitComponent();
-
     auto c = CoolCanvas(100, 200);
 
-    std::vector<std::string> menu_entries = {"Tetris", "Options", "Credits"};
+    std::vector<std::string> menu_entries = {"Tetris", "Credits"};
+    std::vector<std::string> optionNames = {"Game Speed", "Colors"};
 
     auto radiobox = Menu(&menu_entries, &menu, MenuOption::Horizontal());
-
     auto credits = vbox({
-        text("that sum' for loop - titty\n") | bold,
-        text("holding the L - @knob"),
-    });
+        text("that sum' for loop - titty") | bold | center,
+        text("holding the L - @knob") | bold | center,
+        text("literally everything else - me") | bold | color(Color::Gold1) | center
+    }) | size(WIDTH, EQUAL, 50);
 
     auto game_f = Renderer(radiobox, [&] {
 
-        if (menu != 0) return credits;
-        if (!pieceHasRoom(currentShape, pieceLoc, gameArray)) {
-            pieceLoc[1]--;
-            dropBlock(currentShape, pieceLoc, gameArray);
-            score += c.emptyGrids(gameArray) * 100;
-            
-            pieceLoc[0] = 5; pieceLoc[1] = 0;
-            currentShape = randomShape();
-            frames = 0;
-
+        switch (menu){
+            case 1:
+                return credits;
         }
+
+        if (0) { // game over
+            std::fill(&gameArray[0][0], &gameArray[0][0] + sizeof(gameArray), 0);
+            
+            score = 0;
+        }
+        if (!pieceHasRoom(currentShape, pieceLoc, gameArray)) {
+                // check if game should be over;
+                pieceLoc[1]--;
+                bool dropped = dropBlock(currentShape, pieceLoc, gameArray);
+                if (!dropped) {
+                    std::fill(&gameArray[0][0], &gameArray[0][0] + sizeof(gameArray), 0);
+                }
+                score += c.emptyGrids(gameArray) * 100;
+                
+                pieceLoc[0] = 5; pieceLoc[1] = -3;
+                currentShape = randomShape();
+                score = 0;
+                frames = 0;
+                
+            }
+
         if (frames%gameSpeed == 0)
             pieceLoc[1]++;
 
@@ -398,10 +415,11 @@ int main() {
     auto component_renderer = Renderer(game_f, [&] {
         return vbox({
             separatorLight(),
-            radiobox->Render() | frame | flex | center,
+            radiobox->Render()  | center,
             separatorLight() | flex,
             game_f->Render(),
         });
     });
+
     screen.Loop(component_renderer);
 }
