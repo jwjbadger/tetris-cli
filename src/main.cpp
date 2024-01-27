@@ -309,7 +309,7 @@ bool dropBlock(struct Shape block, int spot[2], int game[][10]) {
     for (int y = 0; y < 4; y++) {
         for (int x = 0; x < 4; x++) {
             if (block.shape[block.rot%4][y][x] == 1) {
-                if (y+spot[1] < 1) return false;
+                if (y+spot[1] < 0) return false;
                 game[y+spot[1]][x+spot[0]] = block.id;
             }
         }
