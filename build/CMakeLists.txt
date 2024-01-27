@@ -21,7 +21,7 @@ if(NOT ftxui_POPULATED)
 endif()
 
 # Create the executable
-add_executable(tetris src/main.cpp)
+add_executable(tetris ../src/main.cpp)
 
 # Include directories for FTXUI
 target_include_directories(tetris PRIVATE ${ftxui_SOURCE_DIR})
