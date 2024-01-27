@@ -350,23 +350,19 @@ int main() {
                 return credits;
         }
 
-        if (0) { // game over
-            std::fill(&gameArray[0][0], &gameArray[0][0] + sizeof(gameArray), 0);
-            
-            score = 0;
-        }
         if (!pieceHasRoom(currentShape, pieceLoc, gameArray)) {
                 // check if game should be over;
                 pieceLoc[1]--;
                 bool dropped = dropBlock(currentShape, pieceLoc, gameArray);
                 if (!dropped) {
                     std::fill(&gameArray[0][0], &gameArray[0][0] + sizeof(gameArray), 0);
+                    score = 0;
                 }
+
                 score += c.emptyGrids(gameArray) * 100;
                 
                 pieceLoc[0] = 5; pieceLoc[1] = -3;
                 currentShape = randomShape();
-                score = 0;
                 frames = 0;
                 
             }
@@ -415,6 +411,7 @@ int main() {
     auto component_renderer = Renderer(game_f, [&] {
         return vbox({
             separatorLight(),
+            text("Score: " + std::to_string(score)) | center,
             radiobox->Render()  | center,
             separatorLight() | flex,
             game_f->Render(),
