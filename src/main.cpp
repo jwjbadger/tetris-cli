@@ -322,7 +322,7 @@ bool dropBlock(struct Shape block, int spot[2], int game[][10]) {
 
 int main() {
     srand(time(NULL)); // set random seed
-    
+    int scoreValues[5] = {0, 40, 100, 300, 1200};
     int pieceLoc[2] = {5, -3};
     int gameArray[20][10] = {0};
     int frames = 0;
@@ -357,11 +357,11 @@ int main() {
                 pieceLoc[1]--;
                 bool dropped = dropBlock(currentShape, pieceLoc, gameArray);
                 if (!dropped) {
-                    std::fill(&gameArray[0][0], &gameArray[0][0] + sizeof(gameArray), 0);
+                    std::fill(&gameArray[0][0], &gameArray[0][0] + sizeof(gameArray)/sizeof(int), 0);
                     score = 0;
                 }
 
-                score += c.emptyGrids(gameArray) * 100;
+                score += scoreValues[c.emptyGrids(gameArray)];
                 
                 pieceLoc[0] = 5; pieceLoc[1] = -3;
                 currentShape = randomShape();
