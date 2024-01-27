@@ -321,7 +321,7 @@ bool dropBlock(struct Shape block, int spot[2], int game[][10]) {
 
 
 int main() {
-    int pieceLoc[2] = {5, 0};
+    int pieceLoc[2] = {5, -3};
     int gameArray[20][10] = {0};
     int frames = 0;
     int dropped = 0;
