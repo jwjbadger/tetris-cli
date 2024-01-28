@@ -1,12 +1,13 @@
 /**
  * this is a project i started to learn c++ and the FTXUI library
 */
-#include <ftxui/dom/elements.hpp> 
-#include <ftxui/screen/screen.hpp>  
 #include <string>   
 #include <utility> 
 #include <vector>   
 #include <random>
+
+#include <ftxui/dom/elements.hpp> 
+#include <ftxui/screen/screen.hpp>  
 #include "ftxui/component/captured_mouse.hpp" 
 #include "ftxui/component/component.hpp"  
 #include "ftxui/component/component_base.hpp" 
@@ -16,205 +17,11 @@
 #include "ftxui/dom/canvas.hpp"
 #include "ftxui/screen/color.hpp" 
 
+#include "shapes.h";
+
 using namespace ftxui;
-struct Shape {
-    int shape[4][4][4];
-    int id;
-    int rot=0;
-};
-
-struct Shape T_BLOCK = { { 
-    {
-        {0, 1, 0, 0},
-        {1, 1, 1, 0},
-        {0},
-        {0}
-    },
-    {
-        {0, 1, 0, 0},
-        {0, 1, 1, 0},
-        {0, 1, 0, 0},
-        {0}
-    },
-    {
-        {0, 0, 0, 0},
-        {1, 1, 1, 0},
-        {0, 1, 0, 0},
-        {0}
-    },
-    {
-        {0, 1, 0, 0},
-        {1, 1, 0, 0},
-        {0, 1, 0, 0},
-        {0}
-    }
-}, 1}; 
-struct Shape O_BLOCK {
-    {
-        {
-            {0, 1, 1, 0},
-            {0, 1, 1, 0},
-            {0},
-            {0}
-        },
-        {
-            {0, 1, 1, 0},
-            {0, 1, 1, 0},
-            {0},
-            {0}
-        },
-        {
-            {0, 1, 1, 0},
-            {0, 1, 1, 0},
-            {0},
-            {0}
-        },
-        {
-            {0, 1, 1, 0},
-            {0, 1, 1, 0},
-            {0},
-            {0}
-        }
-    }, 2
-};
-struct Shape I_BLOCK { { 
-    {
-        {0},
-        {1, 1, 1, 1},
-        {0},
-        {0}
-    },
-    {
-        {0, 0, 1},
-        {0, 0, 1},
-        {0, 0, 1},
-        {0, 0, 1}
-    },
-    {
-        {0},
-        {0},
-        {1, 1, 1, 1},
-        {0}
-    },
-    {
-        {0, 1},
-        {0, 1, 0, 0},
-        {0, 1},
-        {0, 1}
-    }
-}, 3};
-struct Shape S_BLOCK = { {
-    {
-        {0, 1, 1, 0},
-        {1, 1, 0, 0},
-        {0},
-        {0}
-    },
-    {
-        {0, 1, 0, 0},
-        {0, 1, 1, 0},
-        {0, 0, 1, 0},
-        {0}
-    },
-    {
-        {0},
-        {0},
-        {0, 1, 1, 0},
-        {1, 1, 0, 0},
-    },
-    {
-        {1, 0, 0, 0},
-        {1, 1, 0, 0},
-        {0, 1, 0, 0},
-        {0}
-    }
-}, 4};
-
-struct Shape Z_BLOCK = { {
-    {
-        {1, 1, 0, 0},
-        {0, 1, 1, 0},
-        {0},
-        {0}
-    },
-    {
-        {0, 0, 1, 0},
-        {0, 1, 1, 0},
-        {0, 1, 0, 0},
-        {0}
-    },
-    {
-        {0},
-        {0},
-        {1, 1, 0, 0},
-        {0, 1, 1, 0},
-    },
-    {
-        {0, 1, 0, 0},
-        {1, 1, 0, 0},
-        {1, 0, 0, 0},
-        {0}
-    }
-}, 5};
-
-struct Shape L_BLOCK = { {
-    {
-        {0},
-        {0, 0, 1, 0},
-        {1, 1, 1, 0},
-        {0},
-    },
-    {
-        {0, 1},
-        {0, 1},
-        {0, 1, 1},
-        {0},
-    },
-    {
-        {0},
-        {1, 1, 1, 0},
-        {1, 0, 0, 0},
-        {0},
-    },
-    {
-        {1, 1},
-        {0, 1},
-        {0, 1},
-        {0},
-    }
-}, 6};
-struct Shape J_BLOCK = { {
-    {
-        {1},
-        {1, 1, 1, 0},
-        {0},
-        {0},
-    },
-    {
-        {0, 1, 1},
-        {0, 1},
-        {0, 1},
-        {0}
-    },
-    {
-        {0},
-        {1, 1, 1},
-        {0, 0, 1},
-        {0}
-    },
-    {
-        {0, 1},
-        {0, 1},
-        {1, 1},
-        {0}
-    }
-}, 7};
 
 Color colors[7] = {Color::Purple, Color::Yellow1, Color::SkyBlue1, Color::Red, Color::LightGreen, Color::DarkOrange, Color::DarkBlue};
-struct Shape SHAPES[7] = {T_BLOCK, I_BLOCK, S_BLOCK, O_BLOCK, Z_BLOCK, L_BLOCK, J_BLOCK};
-struct Shape randomShape() {
-    return SHAPES[rand() % 7];
-}
 
 class CoolCanvas : public Canvas {
     public:
@@ -288,6 +95,10 @@ class CoolCanvas : public Canvas {
 
 
 };
+
+struct Shape randomShape() {
+    return SHAPES[rand() % 7];
+}
 
 bool pieceHasRoom(struct Shape block, int atOrigin[2], int game[][10]) {
     int start_x = atOrigin[0];
