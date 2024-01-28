@@ -17,7 +17,7 @@
 #include "ftxui/dom/canvas.hpp"
 #include "ftxui/screen/color.hpp" 
 
-#include "shapes.h";
+#include "shapes.h"
 
 using namespace ftxui;
 
@@ -64,6 +64,15 @@ class CoolCanvas : public Canvas {
                 DrawBlockLine(x+loop, y, x+loop, y+size, color);
         }
 
+        void outlineBlock(int x, int y, int size, Color color) {
+            for (int loop = 0; loop < size; ++loop)
+                DrawPointLine(x+loop, y, x+loop, y+size, color);
+            // DrawPointLine(x, y, x+size, y, color);
+            // DrawPointLine(x, y, x, y+size, color);
+            // DrawPointLine(x+size, y, x+size, y+size, color);
+            // DrawPointLine(x, y+size, x+size, y+size, color);
+        }
+
 
         void drawBlocks() {
             for (int y = 0; y < 20; y++) {
@@ -88,6 +97,18 @@ class CoolCanvas : public Canvas {
                 for(int y = 0; y < 4; y++) {
                     if (block.shape[block.rot%4][y][x] != 0) {
                         filledBlock(piece_x+x*10, piece_y+y*10, 8, colors[block.id-1]);
+                    }
+                }
+            }
+        }
+
+        void renderOutline(struct Shape block, int origin[2]) {
+            int piece_x = origin[0]*10;
+            int piece_y = origin[1]*10;
+            for (int x = 0; x < 4; x++) {
+                for(int y = 0; y < 4; y++) {
+                    if (block.shape[block.rot%4][y][x] != 0) {
+                        outlineBlock(piece_x+x*10, piece_y+y*10, 8, colors[block.id-1]);
                     }
                 }
             }
@@ -135,12 +156,13 @@ int main() {
     srand(time(NULL)); // set random seed
     int scoreValues[5] = {0, 40, 100, 300, 1200};
     int pieceLoc[2] = {5, -3};
+    int displayPos[2] = {0, 0};
     int gameArray[20][10] = {0};
     int frames = 0;
     int dropped = 0;
     int score = 0;
     int menu = 0;
-    int gameSpeed = 30;
+    int gameSpeed = 25;
 
     struct Shape currentShape = randomShape();
     auto screen = ScreenInteractive::FitComponent();
@@ -162,7 +184,7 @@ int main() {
             case 1:
                 return credits;
         }
-
+        
         if (!pieceHasRoom(currentShape, pieceLoc, gameArray)) {
                 // check if game should be over;
                 pieceLoc[1]--;
@@ -188,13 +210,22 @@ int main() {
         c.drawGameBlocks(gameArray);
 
         c.renderPlayerPiece(currentShape, pieceLoc);
+        c.renderOutline(currentShape, displayPos);
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
+
         frames++;
-        screen.PostEvent(Event::Custom);
+        screen.PostEvent(Event::Custom); // Force loop to continue
         return canvas(std::move(c));
 
     }) | CatchEvent([&](Event event) {
         if (menu != 0) return false;
+
+        // outline of where block will go
+        // only needs updated on input
+        displayPos[0] = pieceLoc[0]; displayPos[1] = -1;
+        while(pieceHasRoom(currentShape, displayPos, gameArray)) displayPos[1]++;
+        displayPos[1]--;
+
         if (event == Event::ArrowDown) {
             frames=gameSpeed;
             return true;
@@ -224,6 +255,7 @@ int main() {
     auto component_renderer = Renderer(game_f, [&] {
         return vbox({
             separatorLight(),
+            text(std::to_string(displayPos[0]) + "," + std::to_string(displayPos[1])),
             text("Score: " + std::to_string(score)) | center,
             radiobox->Render()  | center,
             separatorLight() | flex,
