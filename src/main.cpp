@@ -255,7 +255,6 @@ int main() {
     auto component_renderer = Renderer(game_f, [&] {
         return vbox({
             separatorLight(),
-            text(std::to_string(displayPos[0]) + "," + std::to_string(displayPos[1])),
             text("Score: " + std::to_string(score)) | center,
             radiobox->Render()  | center,
             separatorLight() | flex,
