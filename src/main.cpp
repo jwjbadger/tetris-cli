@@ -208,9 +208,9 @@ int main() {
         
         c.drawBlocks();
         c.drawGameBlocks(gameArray);
-
-        c.renderPlayerPiece(currentShape, pieceLoc);
+        
         c.renderOutline(currentShape, displayPos);
+        c.renderPlayerPiece(currentShape, pieceLoc);
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
         frames++;
