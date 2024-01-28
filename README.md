@@ -13,9 +13,8 @@ Probably going to require a decent amount of fixes, this project was made while 
 `cmake --build . && bin/tetris`
 
 # CONTROLS
-A, D = Left, Right
-W = Hard drop
-S = Soft drop
+Arrow Keys,
+
 R = Rotate
 
 ## Known Issues
@@ -23,5 +22,5 @@ R = Rotate
 
 ## Planned
 - Options menu
-- Score
-- Better rotations 
+- *more* score
+- Better rotations (incl tspin) 
