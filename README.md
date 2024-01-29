@@ -15,7 +15,9 @@ Probably going to require a decent amount of fixes, this project was made while 
 # CONTROLS
 Arrow Keys,
 
-R = Rotate
+R = rotate
+
+C = hold/swap
 
 ## Known Issues
 - none?
