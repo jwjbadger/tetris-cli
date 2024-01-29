@@ -115,7 +115,11 @@ class CoolCanvas : public Canvas {
         }
 
         void drawHeld(struct Shape block) {
-
+            for (int y = 0; y < 4; ++y) {
+                for (int x = 0; x < 4; ++x)
+                    if (block.shape[block.rot%4][y][x] != 0)
+                        filledBlock(100+x*5, 5+y*5, 3, colors[block.id-1]);
+            }
         }
 
 
@@ -172,7 +176,7 @@ int main() {
     struct Shape heldBlock;
     bool hasHeld = 0;
     auto screen = ScreenInteractive::FitComponent();
-    auto c = CoolCanvas(110, 200);
+    auto c = CoolCanvas(130, 200);
 
     std::vector<std::string> menu_entries = {"Tetris", "Credits"};
     std::vector<std::string> optionNames = {"Game Speed", "Colors"};
@@ -219,6 +223,8 @@ int main() {
         
         c.renderOutline(currentShape, displayPos);
         c.renderPlayerPiece(currentShape, pieceLoc);
+        if (heldBlock.id != -1) c.drawHeld(heldBlock);
+
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
 
         frames++;
@@ -262,6 +268,7 @@ int main() {
             if (heldBlock.id == -1) heldBlock = randomShape();
             struct Shape temp = heldBlock;
             heldBlock = currentShape;
+            heldBlock.rot = 0;
             currentShape = temp;
             hasHeld = true;
         }
@@ -270,10 +277,10 @@ int main() {
     
     auto component_renderer = Renderer(game_f, [&] {
         return vbox({
-            separatorLight(),
-            text("Score: " + std::to_string(score)) | center,
-            radiobox->Render()  | center,
-            separatorLight() | flex,
+            separatorLight() | size(WIDTH, EQUAL, 48),
+            text("Score: " + std::to_string(score)) | center | size(WIDTH, EQUAL, 48),
+            radiobox->Render()  | center | size(WIDTH, EQUAL, 48),
+            separatorLight() | flex | size(WIDTH, EQUAL, 48),
             game_f->Render(),
         });
     });
