@@ -114,6 +114,10 @@ class CoolCanvas : public Canvas {
             }
         }
 
+        void drawHeld(struct Shape block) {
+
+        }
+
 
 };
 
@@ -165,8 +169,10 @@ int main() {
     int gameSpeed = 25;
 
     struct Shape currentShape = randomShape();
+    struct Shape heldBlock;
+    bool hasHeld = 0;
     auto screen = ScreenInteractive::FitComponent();
-    auto c = CoolCanvas(100, 200);
+    auto c = CoolCanvas(110, 200);
 
     std::vector<std::string> menu_entries = {"Tetris", "Credits"};
     std::vector<std::string> optionNames = {"Game Speed", "Colors"};
@@ -186,11 +192,13 @@ int main() {
         }
         
         if (!pieceHasRoom(currentShape, pieceLoc, gameArray)) {
-                // check if game should be over;
                 pieceLoc[1]--;
+                hasHeld = false;
+                // check if game should be over;
                 bool dropped = dropBlock(currentShape, pieceLoc, gameArray);
                 if (!dropped) {
                     std::fill(&gameArray[0][0], &gameArray[0][0] + sizeof(gameArray)/sizeof(int), 0);
+                    heldBlock = {};
                     score = 0;
                 }
 
@@ -248,6 +256,14 @@ int main() {
             currentShape.rot++;
             if (!pieceHasRoom(currentShape, pieceLoc, gameArray))
             currentShape.rot--;
+        } else if (event == Event::Character('c')) {
+            if (hasHeld) return true;
+            pieceLoc[0] = 5; pieceLoc[1] = -3;
+            if (heldBlock.id == -1) heldBlock = randomShape();
+            struct Shape temp = heldBlock;
+            heldBlock = currentShape;
+            currentShape = temp;
+            hasHeld = true;
         }
         return false;
     });    

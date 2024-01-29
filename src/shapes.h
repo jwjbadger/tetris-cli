@@ -1,6 +1,6 @@
 struct Shape {
     int shape[4][4][4];
-    int id;
+    int id = -1;
     int rot=0;
 };
 
