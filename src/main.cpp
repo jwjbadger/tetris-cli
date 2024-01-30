@@ -133,14 +133,12 @@ bool pieceHasRoom(struct Shape block, int atOrigin[2], int game[][10]) {
     int start_x = atOrigin[0];
     for (int y = 0; y < 4; y++) {
         for (int x = 0; x < 4; x++) {
-            if (atOrigin[0]+x > 10 || atOrigin[0]+x < 0)
+            if (block.shape[block.rot%4][y][x] == 1 && (start_x+x > 9 || start_x+x < 0)) 
                 return false;
             if (atOrigin[1]+y < 0) {
                 continue;
             }
             if (block.shape[block.rot%4][y][x] == 1 && (game[atOrigin[1]+y][x+start_x] != 0 || atOrigin[1]+y > 19) )
-                return false;
-            if (block.shape[block.rot%4][y][x] == 1 && (start_x+x > 9 || start_x+x < 0)) 
                 return false;
         }
     }
