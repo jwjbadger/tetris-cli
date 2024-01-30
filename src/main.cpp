@@ -133,6 +133,8 @@ bool pieceHasRoom(struct Shape block, int atOrigin[2], int game[][10]) {
     int start_x = atOrigin[0];
     for (int y = 0; y < 4; y++) {
         for (int x = 0; x < 4; x++) {
+            if (atOrigin[0]+x > 10 || atOrigin[0]+x < 0)
+                return false;
             if (atOrigin[1]+y < 0) {
                 continue;
             }
