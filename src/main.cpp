@@ -163,12 +163,20 @@ bool dropBlock(struct Shape block, int spot[2], int game[][10]) {
 
 int main() {
     srand(time(NULL)); // set random seed
+    Event controls[6] = {
+        Event::ArrowLeft, // Move piece left
+        Event::ArrowRight, // Move piece right
+        Event::ArrowDown, // Soft drop
+        Event::ArrowUp, // Hard drop
+        Event::Character('r'), // Rotate
+        Event::Character('c'), // Hold
+    };
+
     int scoreValues[5] = {0, 40, 100, 300, 1200};
     int pieceLoc[2] = {5, -3};
     int displayPos[2] = {0, 0};
     int gameArray[20][10] = {0};
     int frames = 0;
-    int dropped = 0;
     int score = 0;
     int menu = 0;
     int gameSpeed = 25;
@@ -237,29 +245,29 @@ int main() {
         while(pieceHasRoom(currentShape, displayPos, gameArray)) displayPos[1]++;
         displayPos[1]--;
 
-        if (event == Event::ArrowDown) {
+        if (event == controls[2]) {
             frames=gameSpeed;
             return true;
-        } else if (event == Event::ArrowLeft) {
+        } else if (event == controls[0]) {
             pieceLoc[0]--;
             if (!pieceHasRoom(currentShape, pieceLoc, gameArray))
                 pieceLoc[0]++;
             return true;
-        } else if (event == Event::ArrowRight) {
+        } else if (event == controls[1]) {
             pieceLoc[0]++;
             if (!pieceHasRoom(currentShape, pieceLoc, gameArray))
                 pieceLoc[0]--;
             return true;
-        } else if (event == Event::ArrowUp) {
+        } else if (event == controls[3]) {
             while (pieceHasRoom(currentShape, pieceLoc, gameArray))
                 pieceLoc[1]++;
             pieceLoc[1]--;
             frames=gameSpeed;
-        } else if (event == Event::Character('r')) {
+        } else if (event == controls[4]) {
             currentShape.rot++;
             if (!pieceHasRoom(currentShape, pieceLoc, gameArray))
             currentShape.rot--;
-        } else if (event == Event::Character('c')) {
+        } else if (event == controls[5]) {
             if (hasHeld) return true;
             pieceLoc[0] = 5; pieceLoc[1] = -3;
             if (heldBlock.id == -1) heldBlock = randomShape();
