@@ -115,12 +115,17 @@ class CoolCanvas : public Canvas {
             }
         }
 
-        void drawHeld(struct Shape block) {
+        void drawHeld(struct Shape block, int xoff, int yoff) {
             for (int y = 0; y < 4; ++y) {
                 for (int x = 0; x < 4; ++x)
                     if (block.shape[block.rot%4][y][x] != 0)
-                        filledBlock(x*4 + block.offset[0], y*4 + block.offset[1], 2, colors[block.id-1]);
+                        filledBlock(x*4 + block.offset[0] + xoff, y*4 + block.offset[1] + yoff, 2, colors[block.id-1]);
             }
+        }
+
+        void drawUpcomming(std::vector<struct Shape> shapeList) {
+            for (int i = 0; i < shapeList.size(); ++i)
+                drawHeld(shapeList.at(i), 0, i*15);
         }
 
 
@@ -171,6 +176,8 @@ int main() {
         Event::Character('r'), // Rotate
         Event::Character('c'), // Hold
     };
+    std::vector<struct Shape> shapes = {};
+    for (int i = 0; i <= 5; ++i) shapes.push_back(randomShape());
 
     int scoreValues[5] = {0, 40, 100, 300, 1200};
     int pieceLoc[2] = {5, -3};
@@ -188,9 +195,9 @@ int main() {
     auto screen = ScreenInteractive::FitComponent();
     auto c = CoolCanvas(98, 200);
     auto blockDisplay = CoolCanvas(14, 12);
+    auto blockListDisplay = CoolCanvas(14, 75);
 
     std::vector<std::string> menu_entries = {"Tetris", "Credits"};
-    std::vector<std::string> optionNames = {"Game Speed", "Colors"};
 
     auto radiobox = Menu(&menu_entries, &menu, MenuOption::Horizontal());
     auto credits = vbox({
@@ -199,9 +206,14 @@ int main() {
         text("literally everything else - me") | bold | color(Color::Gold1) | center
     }) | size(WIDTH, EQUAL, 50);
 
-    auto side_display = Renderer([&] {
-        if (heldBlock.id != -1) blockDisplay.drawHeld(heldBlock);
+    auto held_display = Renderer([&] {
+        if (heldBlock.id != -1) blockDisplay.drawHeld(heldBlock, 0, 0);
         return canvas(std::move(blockDisplay));
+    });
+
+    auto blockList = Renderer([&] {
+        blockListDisplay.drawUpcomming(shapes);
+        return canvas(std::move(blockListDisplay));
     });
 
     auto game_area = Renderer(radiobox, [&] {
@@ -225,7 +237,11 @@ int main() {
                 score += scoreValues[c.emptyGrids(gameArray)];
                 
                 pieceLoc[0] = 5; pieceLoc[1] = -3;
-                currentShape = randomShape();
+
+                currentShape = shapes.at(0);
+                shapes.push_back(randomShape());
+                shapes.erase(shapes.begin());
+                
                 frames = 0;
                 
             }
@@ -277,7 +293,11 @@ int main() {
         } else if (event == controls[5]) {
             if (hasHeld) return true;
             pieceLoc[0] = 5; pieceLoc[1] = -3;
-            if (heldBlock.id == -1) heldBlock = randomShape();
+            if (heldBlock.id == -1) {
+                heldBlock = shapes.at(0);
+                shapes.erase(shapes.begin());
+                shapes.push_back(randomShape());
+            }
             struct Shape temp = heldBlock;
             heldBlock = currentShape;
             heldBlock.rot = 0;
@@ -295,7 +315,10 @@ int main() {
             separatorLight() | flex | size(WIDTH, EQUAL, 48),
             hbox({
                 game_area->Render() | border,
-                vbox({side_display->Render() | border}) | flex
+                vbox({
+                    held_display->Render() | border,
+                    blockList->Render() | border
+                    }) | flex
                 })
         });
     });
