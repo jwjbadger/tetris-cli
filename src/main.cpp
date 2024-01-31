@@ -119,7 +119,7 @@ class CoolCanvas : public Canvas {
             for (int y = 0; y < 4; ++y) {
                 for (int x = 0; x < 4; ++x)
                     if (block.shape[block.rot%4][y][x] != 0)
-                        filledBlock(100+x*5, 5+y*5, 3, colors[block.id-1]);
+                        filledBlock(x*4, y*4, 3, colors[block.id-1]);
             }
         }
 
@@ -184,8 +184,10 @@ int main() {
     struct Shape currentShape = randomShape();
     struct Shape heldBlock;
     bool hasHeld = 0;
+
     auto screen = ScreenInteractive::FitComponent();
-    auto c = CoolCanvas(130, 200);
+    auto c = CoolCanvas(100, 200);
+    auto blockDisplay = CoolCanvas(16, 12);
 
     std::vector<std::string> menu_entries = {"Tetris", "Credits"};
     std::vector<std::string> optionNames = {"Game Speed", "Colors"};
@@ -196,7 +198,13 @@ int main() {
         text("holding the L - @knob") | bold | center,
         text("literally everything else - me") | bold | color(Color::Gold1) | center
     }) | size(WIDTH, EQUAL, 50);
-    auto game_f = Renderer(radiobox, [&] {
+
+    auto side_display = Renderer([&] {
+        if (heldBlock.id != -1) blockDisplay.drawHeld(heldBlock);
+        return canvas(std::move(blockDisplay));
+    });
+
+    auto game_area = Renderer(radiobox, [&] {
 
         switch (menu){
             case 1:
@@ -231,7 +239,6 @@ int main() {
         
         c.renderOutline(currentShape, displayPos);
         c.renderPlayerPiece(currentShape, pieceLoc);
-        if (heldBlock.id != -1) c.drawHeld(heldBlock);
 
         screen.PostEvent(Event::Custom); // This will force the canvas to update every frame.
         return canvas(std::move(c));
@@ -280,13 +287,16 @@ int main() {
         return false;
     });    
     
-    auto component_renderer = Renderer(game_f, [&] {
+    auto component_renderer = Renderer(game_area, [&] {
         return vbox({
             separatorLight() | size(WIDTH, EQUAL, 48),
             text("Score: " + std::to_string(score)) | center | size(WIDTH, EQUAL, 48),
             radiobox->Render()  | center | size(WIDTH, EQUAL, 48),
             separatorLight() | flex | size(WIDTH, EQUAL, 48),
-            game_f->Render(),
+            hbox({
+                game_area->Render() | border,
+                vbox({side_display->Render() | border}) | flex
+                })
         });
     });
 
