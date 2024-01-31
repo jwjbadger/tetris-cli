@@ -15,6 +15,7 @@
 #include "ftxui/component/mouse.hpp"
 #include "ftxui/component/screen_interactive.hpp"
 #include "ftxui/dom/canvas.hpp"
+#include "ftxui/component/loop.hpp"       // for Loop
 #include "ftxui/screen/color.hpp" 
 
 #include "shapes.h"
@@ -225,10 +226,7 @@ int main() {
         c.renderPlayerPiece(currentShape, pieceLoc);
         if (heldBlock.id != -1) c.drawHeld(heldBlock);
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(10));
-
-        frames++;
-        screen.PostEvent(Event::Custom); // Force loop to continue
+        screen.PostEvent(Event::Custom); // This will force the canvas to update every frame.
         return canvas(std::move(c));
 
     }) | CatchEvent([&](Event event) {
@@ -278,12 +276,18 @@ int main() {
     auto component_renderer = Renderer(game_f, [&] {
         return vbox({
             separatorLight() | size(WIDTH, EQUAL, 48),
+            text("DEBUG: Frames: " + std::to_string(frames)),
             text("Score: " + std::to_string(score)) | center | size(WIDTH, EQUAL, 48),
             radiobox->Render()  | center | size(WIDTH, EQUAL, 48),
             separatorLight() | flex | size(WIDTH, EQUAL, 48),
             game_f->Render(),
         });
     });
-
-    screen.Loop(component_renderer);
+  Loop loop(&screen, component_renderer);
+ 
+  while (!loop.HasQuitted()) {
+    frames++;
+    loop.RunOnce();
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+  }
 }
