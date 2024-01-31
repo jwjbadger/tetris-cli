@@ -188,7 +188,6 @@ int main() {
         text("holding the L - @knob") | bold | center,
         text("literally everything else - me") | bold | color(Color::Gold1) | center
     }) | size(WIDTH, EQUAL, 50);
-
     auto game_f = Renderer(radiobox, [&] {
 
         switch (menu){
