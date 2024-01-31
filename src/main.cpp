@@ -119,7 +119,7 @@ class CoolCanvas : public Canvas {
             for (int y = 0; y < 4; ++y) {
                 for (int x = 0; x < 4; ++x)
                     if (block.shape[block.rot%4][y][x] != 0)
-                        filledBlock(x*4, y*4, 3, colors[block.id-1]);
+                        filledBlock(x*4 + block.offset[0], y*4 + block.offset[1], 2, colors[block.id-1]);
             }
         }
 
@@ -186,8 +186,8 @@ int main() {
     bool hasHeld = 0;
 
     auto screen = ScreenInteractive::FitComponent();
-    auto c = CoolCanvas(100, 200);
-    auto blockDisplay = CoolCanvas(16, 12);
+    auto c = CoolCanvas(98, 200);
+    auto blockDisplay = CoolCanvas(14, 12);
 
     std::vector<std::string> menu_entries = {"Tetris", "Credits"};
     std::vector<std::string> optionNames = {"Game Speed", "Colors"};
