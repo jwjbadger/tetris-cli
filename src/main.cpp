@@ -49,7 +49,7 @@ class CoolCanvas : public Canvas {
                     if (std::none_of(game[y], game[y]+n, [](int i) {
                         return i == 0;
                     })) {
-                        for (int a = y-1; a > 2; a--) {
+                        for (int a = y-1; a > 0; a--) {
                             std::copy(std::begin(game[a]), std::end(game[a]), std::begin(game[a+1]));
                         }
                         y = 20;
