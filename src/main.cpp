@@ -276,18 +276,21 @@ int main() {
     auto component_renderer = Renderer(game_f, [&] {
         return vbox({
             separatorLight() | size(WIDTH, EQUAL, 48),
-            text("DEBUG: Frames: " + std::to_string(frames)),
             text("Score: " + std::to_string(score)) | center | size(WIDTH, EQUAL, 48),
             radiobox->Render()  | center | size(WIDTH, EQUAL, 48),
             separatorLight() | flex | size(WIDTH, EQUAL, 48),
             game_f->Render(),
         });
     });
+
   Loop loop(&screen, component_renderer);
  
   while (!loop.HasQuitted()) {
     frames++;
     loop.RunOnce();
-    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    std::this_thread::sleep_for(std::chrono::milliseconds(20)); // ~50 fps
   }
+
+  return EXIT_SUCCESS;
+
 }
