@@ -44,7 +44,7 @@ class CoolCanvas : public Canvas {
                 int amm = 0;
                 int n = sizeof(game[0]) / sizeof(game[0][0]);
 
-                for (int y = 20; y > 1; y--) {
+                for (int y = 20; y > 0; y--) {
 
                     if (std::none_of(game[y], game[y]+n, [](int i) {
                         return i == 0;
