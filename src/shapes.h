@@ -1,7 +1,7 @@
 struct Shape {
     int shape[4][4][4];
     int id = -1;
-    int rot=0;
+    unsigned int rot=0;
     int offset[2]={2, 2};
 };
 
