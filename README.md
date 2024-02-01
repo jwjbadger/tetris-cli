@@ -14,21 +14,26 @@ Probably going to require a decent amount of fixes, this project was made while 
 
 # CONTROLS
 
-Arrow UP, X, Z, A - Rotate
+Arrow UP, X - Rotate clockwise
 
-Arrow Left, Right - *move*
+Z - Rotate counterclockwise
+
+A - Rotate 180°
+
+Arrow Left, Arrow Right - *move*
 
 Arrow Down - Soft Drop
 
 Space - Hard Drop
 
-C - HOLD
+C - Hold
 
 
 ## Known Issues
 - none?
 
 ## Planned
-- Options menu
-- *more* score
-- Better rotations (incl tspin) 
+- [ ] Options menu
+  - [ ] Controls rebinding
+- [ ] *more* score
+- [ ] Better rotations (incl tspin) 
