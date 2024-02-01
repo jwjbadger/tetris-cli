@@ -27,6 +27,7 @@ using namespace ftxui;
 const int GAME_WIDTH = 10;
 const int GAME_HEIGHT = 20;
 int GAME_BLOCK_SIZE = 8;
+int GAP_SIZE = GAME_BLOCK_SIZE + 1;
 
 Color colors[7] = {Color::Purple, Color::Yellow1, Color::SkyBlue1, Color::Red, Color::LightGreen, Color::DarkOrange, Color::DarkBlue};
 
@@ -36,15 +37,7 @@ class CoolCanvas : public Canvas {
         {
 
         }
-        void drawGrid(int8_t sizex, int8_t sizey, int8_t x, int8_t y) {
-            int xinc = sizex/x;
-            for (int xAxis = 0; xAxis <= x; xAxis++) {
-                DrawPointLine(xinc*xAxis, 0, xinc*xAxis, 200, Color::Gold1);
-            }
-            for (int yAxis = 0; yAxis <= y; yAxis++) {
-                DrawPointLine(0, yAxis*10, 100, yAxis*10, Color::Red);
-            }
-        }
+
 
         int emptyGrids(int game[][GAME_WIDTH]) {
                 int amm = 0;
@@ -84,7 +77,7 @@ class CoolCanvas : public Canvas {
         void drawBlocks() {
             for (int y = 0; y < GAME_HEIGHT; y++) {
                 for (int x = 0; x < GAME_WIDTH; x++) 
-                    filledBlock(x*10+5, y*10+5, 1, Color::GrayDark);
+                    filledBlock(x*GAP_SIZE, y*GAP_SIZE, GAME_BLOCK_SIZE, Color::GrayDark);
             }
         }
 
@@ -92,30 +85,30 @@ class CoolCanvas : public Canvas {
             for (int y = 0; y < GAME_HEIGHT; y++) {
                 for (int x = 0; x < GAME_WIDTH; x++) {
                     if (arr[y][x] != 0)
-                        filledBlock(x*10, y*10, GAME_BLOCK_SIZE, colors[arr[y][x]-1]);
+                        filledBlock(x*GAP_SIZE, y*GAP_SIZE, GAME_BLOCK_SIZE, colors[arr[y][x]-1]);
                 }
             }
         }
 
         void renderPlayerPiece(struct Shape block, int origin[2]) {
-            int piece_x = origin[0]*10;
-            int piece_y = origin[1]*10;
+            int piece_x = origin[0]*GAP_SIZE;
+            int piece_y = origin[1]*GAP_SIZE;
             for (int x = 0; x < 4; x++) {
                 for(int y = 0; y < 4; y++) {
                     if (block.shape[block.rot%4][y][x] != 0) {
-                        filledBlock(piece_x+x*10, piece_y+y*10, GAME_BLOCK_SIZE, colors[block.id-1]);
+                        filledBlock(piece_x+x*GAP_SIZE, piece_y+y*GAP_SIZE, GAME_BLOCK_SIZE, colors[block.id-1]);
                     }
                 }
             }
         }
 
         void renderOutline(struct Shape block, int origin[2]) {
-            int piece_x = origin[0]*10;
-            int piece_y = origin[1]*10;
+            int piece_x = origin[0]*GAP_SIZE;
+            int piece_y = origin[1]*GAP_SIZE;
             for (int x = 0; x < 4; x++) {
                 for(int y = 0; y < 4; y++) {
                     if (block.shape[block.rot%4][y][x] != 0) {
-                        outlineBlock(piece_x+x*10, piece_y+y*10, GAME_BLOCK_SIZE, colors[block.id-1]);
+                        outlineBlock(piece_x+x*GAP_SIZE, piece_y+y*GAP_SIZE, GAME_BLOCK_SIZE, colors[block.id-1]);
                     }
                 }
             }
@@ -202,7 +195,7 @@ int main() {
     bool hasHeld = 0;
 
     auto screen = ScreenInteractive::FitComponent();
-    auto c = CoolCanvas(GAME_WIDTH * 10, GAME_HEIGHT * 10);
+    auto c = CoolCanvas(GAME_WIDTH * GAP_SIZE, GAME_HEIGHT * GAP_SIZE);
     auto blockDisplay = CoolCanvas(14, 12);
     auto blockListDisplay = CoolCanvas(14, 75);
 
