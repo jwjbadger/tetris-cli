@@ -27,7 +27,7 @@ using namespace ftxui;
 const int GAME_WIDTH = 10;
 const int GAME_HEIGHT = 20;
 int GAME_BLOCK_SIZE = 8;
-int GAP_SIZE = GAME_BLOCK_SIZE + 1;
+int GAP_SIZE = GAME_BLOCK_SIZE + 2;
 
 Color colors[7] = {Color::Purple, Color::Yellow1, Color::SkyBlue1, Color::Red, Color::LightGreen, Color::DarkOrange, Color::DarkBlue};
 
@@ -180,9 +180,9 @@ int main() {
     srand(time(NULL)); // set random seed
     std::vector<struct Shape> shapes = {};
     for (int i = 0; i <= 5; ++i) shapes.push_back(randomShape());
-
+    /* Long blocks will clip out when board and cause instant death when board size is < 7 */
     int scoreValues[5] = {0, 40, 100, 300, 1200};
-    int pieceLoc[2] = {5, -3};
+    int pieceLoc[2] = {(int)GAME_WIDTH/2, -3};
     int displayPos[2] = {0, 0};
     int gameArray[GAME_HEIGHT][GAME_WIDTH] = {0};
     int frames = 0;
@@ -238,7 +238,7 @@ int main() {
 
                 score += scoreValues[c.emptyGrids(gameArray)];
                 
-                pieceLoc[0] = 5; pieceLoc[1] = -3;
+                pieceLoc[0] = (int)GAME_WIDTH/2; pieceLoc[1] = -3;
 
                 currentShape = shapes.at(0);
                 shapes.push_back(randomShape());
