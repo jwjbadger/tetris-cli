@@ -339,7 +339,7 @@ int main() {
             radiobox->Render()  | center | size(WIDTH, EQUAL, 48),
             separatorLight() | flex | size(WIDTH, EQUAL, 48),
             hbox({
-                game_area->Render() | border,
+                game_area->Render() | border | flex,
                 vbox({
                     held_display->Render() | border,
                     blockList->Render() | border
