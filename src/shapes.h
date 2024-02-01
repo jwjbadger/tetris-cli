@@ -2,6 +2,7 @@ struct Shape {
     int shape[4][4][4];
     int id = -1;
     int rot=0;
+    int offset[2]={2, 2};
 };
 
 struct Shape T_BLOCK = { { 
@@ -56,7 +57,7 @@ struct Shape O_BLOCK {
             {0},
             {0}
         }
-    }, 2
+    }, 2, 0, {0, 3}
 };
 struct Shape I_BLOCK { { 
     {
@@ -83,7 +84,7 @@ struct Shape I_BLOCK { {
         {0, 1},
         {0, 1}
     }
-}, 3};
+}, 3, 0, {0, 1}};
 struct Shape S_BLOCK = { {
     {
         {0, 1, 1, 0},
@@ -98,17 +99,15 @@ struct Shape S_BLOCK = { {
         {0}
     },
     {
-        {0},
-        {0},
         {0, 1, 1, 0},
         {1, 1, 0, 0},
     },
     {
-        {1, 0, 0, 0},
-        {1, 1, 0, 0},
         {0, 1, 0, 0},
+        {0, 1, 1, 0},
+        {0, 0, 1, 0},
         {0}
-    }
+    },
 }, 4};
 
 struct Shape Z_BLOCK = { {
@@ -131,11 +130,11 @@ struct Shape Z_BLOCK = { {
         {0, 1, 1, 0},
     },
     {
+        {0, 0, 1, 0},
+        {0, 1, 1, 0},
         {0, 1, 0, 0},
-        {1, 1, 0, 0},
-        {1, 0, 0, 0},
         {0}
-    }
+    },
 }, 5};
 
 struct Shape L_BLOCK = { {
@@ -163,12 +162,12 @@ struct Shape L_BLOCK = { {
         {0, 1},
         {0},
     }
-}, 6};
+}, 6, 0, {2, -2}};
 struct Shape J_BLOCK = { {
     {
+        {0},
         {1},
         {1, 1, 1, 0},
-        {0},
         {0},
     },
     {
@@ -189,6 +188,6 @@ struct Shape J_BLOCK = { {
         {1, 1},
         {0}
     }
-}, 7};
+}, 7, 0, {2, -2}};
 
 struct Shape SHAPES[7] = {T_BLOCK, I_BLOCK, S_BLOCK, O_BLOCK, Z_BLOCK, L_BLOCK, J_BLOCK};

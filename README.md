@@ -1,7 +1,7 @@
 # Tetris-CLI
 <b>Tetris-CLI is a cross-platform(hopefully) command-line tetris game which has full terminal support, color support, and many other features to come.</b>
 
-![](https://i.imgur.com/sMEzl3b.png)
+![](https://imgur.com/PwJi4Wk.png)
 
 Probably going to require a decent amount of fixes, this project was made while I was in the process of learning not only the library but also C++ in general.
 
@@ -13,11 +13,17 @@ Probably going to require a decent amount of fixes, this project was made while 
 `cmake --build . && bin/tetris`
 
 # CONTROLS
-Arrow Keys,
 
-R = rotate
+Arrow UP, X, Z, A - Rotate
 
-C = hold/swap
+Arrow Left, Right - *move*
+
+Arrow Down - Soft Drop
+
+Space - Hard Drop
+
+C - HOLD
+
 
 ## Known Issues
 - none?
