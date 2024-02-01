@@ -164,18 +164,21 @@ bool dropBlock(struct Shape block, int spot[2], int game[][10]) {
     return true;
 }
 
+enum Controls {left, right, softDrop, hardDrop, clockwiseRotate, counterClockwiseRotate, fullRotate, hold};
 
+const Event controlsArray[][3] = {
+	{Event::Special("\x1B[D")}, // Move piece left (left arrow is awful oml)
+	{Event::Special("\x1B[C")}, // Move piece right
+	{Event::Special("\x1B[B")}, // Soft drop
+	{Event::Character(' ')}, // Hard drop
+	{Event::Special("\x1B[A"), Event::Character('x')}, // Rotate
+	{Event::Character('z')}, // Rotate the other way
+	{Event::Character('a')}, // Rotate 180 deg
+	{Event::Character('c')} // Hold
+};
 
 int main() {
     srand(time(NULL)); // set random seed
-    Event controls[6] = {
-        Event::ArrowLeft, // Move piece left
-        Event::ArrowRight, // Move piece right
-        Event::ArrowDown, // Soft drop
-        Event::ArrowUp, // Hard drop
-        Event::Character('r'), // Rotate
-        Event::Character('c'), // Hold
-    };
     std::vector<struct Shape> shapes = {};
     for (int i = 0; i <= 5; ++i) shapes.push_back(randomShape());
 
@@ -267,44 +270,66 @@ int main() {
         displayPos[0] = pieceLoc[0]; displayPos[1] = -1;
         while(pieceHasRoom(currentShape, displayPos, gameArray)) displayPos[1]++;
         displayPos[1]--;
+		
+		for (int i = 0; i < 8; ++i) {
+			if (std::find(std::begin(controlsArray[i]), std::end(controlsArray[i]), event) != std::end(controlsArray[i])) {
+				switch (i) {
+					case Controls::left:
+						pieceLoc[0]--;
+						if (!pieceHasRoom(currentShape, pieceLoc, gameArray))
+							pieceLoc[0]++;
+						return true;
+					case Controls::right:
+						pieceLoc[0]++;
+						if (!pieceHasRoom(currentShape, pieceLoc, gameArray))
+							pieceLoc[0]--;
+						return true;
+					case Controls::softDrop:
+						frames=gameSpeed;
+						return true;
+					case Controls::clockwiseRotate:
+						currentShape.rot++;
+            			if (!pieceHasRoom(currentShape, pieceLoc, gameArray))
+            				currentShape.rot--;
+						return true;
+					case Controls::counterClockwiseRotate:
+						currentShape.rot--;
+            			if (!pieceHasRoom(currentShape, pieceLoc, gameArray))
+            				currentShape.rot++;
+						return true;
+					case Controls::fullRotate:
+						currentShape.rot -= 2;
+            			if (!pieceHasRoom(currentShape, pieceLoc, gameArray))
+            				currentShape.rot += 2;
+						return true;
+					case Controls::hardDrop:
+						while (pieceHasRoom(currentShape, pieceLoc, gameArray))
+                			pieceLoc[1]++;
+            			pieceLoc[1]--;
+            			frames=gameSpeed;
+						return true;
+					case Controls::hold:
+						if (hasHeld) return true;
 
-        if (event == controls[2]) {
-            frames=gameSpeed;
-            return true;
-        } else if (event == controls[0]) {
-            pieceLoc[0]--;
-            if (!pieceHasRoom(currentShape, pieceLoc, gameArray))
-                pieceLoc[0]++;
-            return true;
-        } else if (event == controls[1]) {
-            pieceLoc[0]++;
-            if (!pieceHasRoom(currentShape, pieceLoc, gameArray))
-                pieceLoc[0]--;
-            return true;
-        } else if (event == controls[3]) {
-            while (pieceHasRoom(currentShape, pieceLoc, gameArray))
-                pieceLoc[1]++;
-            pieceLoc[1]--;
-            frames=gameSpeed;
-        } else if (event == controls[4]) {
-            currentShape.rot++;
-            if (!pieceHasRoom(currentShape, pieceLoc, gameArray))
-            currentShape.rot--;
-        } else if (event == controls[5]) {
-            if (hasHeld) return true;
-            pieceLoc[0] = 5; pieceLoc[1] = -3;
-            if (heldBlock.id == -1) {
-                heldBlock = shapes.at(0);
-                shapes.erase(shapes.begin());
-                shapes.push_back(randomShape());
-            }
-            struct Shape temp = heldBlock;
-            heldBlock = currentShape;
-            heldBlock.rot = 0;
-            currentShape = temp;
-            hasHeld = true;
-        }
-        return false;
+						pieceLoc[0] = 5; pieceLoc[1] = -3;
+						if (heldBlock.id == -1) {
+							heldBlock = shapes.at(0);
+							shapes.erase(shapes.begin());
+							shapes.push_back(randomShape());
+						}
+
+						struct Shape temp = heldBlock;
+						heldBlock = currentShape;
+						heldBlock.rot = 0;
+						currentShape = temp;
+						hasHeld = true;
+
+						return true;
+				}
+			}
+		}
+		
+		return false;
     });    
     
     auto component_renderer = Renderer(game_area, [&] {
