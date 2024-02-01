@@ -270,7 +270,7 @@ int main() {
 
     }) | CatchEvent([&](Event event) {
         if (menu != 0) return false;
-
+        if (event.is_mouse()) return false;
         // outline of where block will go
         // only needs updated on input
         displayPos[0] = pieceLoc[0]; displayPos[1] = -1;
