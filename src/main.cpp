@@ -340,10 +340,10 @@ int main() {
     
     auto component_renderer = Renderer(game_area, [&] {
         return vbox({
-            separatorLight() | size(WIDTH, EQUAL, 48),
-            text("Score: " + std::to_string(score)) | center | size(WIDTH, EQUAL, 48),
-            radiobox->Render()  | center | size(WIDTH, EQUAL, 48),
-            separatorLight() | flex | size(WIDTH, EQUAL, 48),
+            separatorLight(),
+            text("Score: " + std::to_string(score)) | center,
+            radiobox->Render()  | center,
+            separatorLight() | flex,
             hbox({
                 game_area->Render() | border | flex,
                 vbox({
