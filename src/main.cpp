@@ -203,9 +203,14 @@ int main() {
 
     auto radiobox = Menu(&menu_entries, &menu, MenuOption::Horizontal());
     auto credits = vbox({
-        text("that sum' for loop - titty") | bold | center,
-        text("holding the L - @knob") | bold | center,
-        text("literally everything else - me") | bold | color(Color::Gold1) | center
+        separatorDashed(), 
+        text("Multi-keybind support - @jwjbadger") | bold | center,
+        separatorDashed(), 
+        text("Rest of the game - @EnjoyYourBan") | bold | color(Color::Gold1) | center,
+        separatorDashed(), 
+        text("Want to contribute?") | center,
+        text("CTRL + Click Here") | hyperlink("https://github.com/EnjoyYourBan/tetris-cli") | center,
+        separatorDashed(), 
     }) | size(WIDTH, EQUAL, 50);
 
     auto held_display = Renderer([&] {
