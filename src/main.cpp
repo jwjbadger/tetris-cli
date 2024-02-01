@@ -182,7 +182,7 @@ int main() {
     for (int i = 0; i <= 5; ++i) shapes.push_back(randomShape());
     /* Long blocks will clip out when board and cause instant death when board size is < 7 */
     int scoreValues[5] = {0, 40, 100, 300, 1200};
-    int pieceLoc[2] = {(int)GAME_WIDTH/2, -3};
+    int pieceLoc[2] = {(int)GAME_WIDTH/2 - 1, -3};
     int displayPos[2] = {0, 0};
     int gameArray[GAME_HEIGHT][GAME_WIDTH] = {0};
     int frames = 0;
@@ -238,7 +238,7 @@ int main() {
 
                 score += scoreValues[c.emptyGrids(gameArray)];
                 
-                pieceLoc[0] = (int)GAME_WIDTH/2; pieceLoc[1] = -3;
+                pieceLoc[0] = (int)GAME_WIDTH/2-1; pieceLoc[1] = -3;
 
                 currentShape = shapes.at(0);
                 shapes.push_back(randomShape());
@@ -310,7 +310,7 @@ int main() {
 					case Controls::hold:
 						if (hasHeld) return true;
 
-						pieceLoc[0] = 5; pieceLoc[1] = -3;
+						pieceLoc[0] = (int)GAME_WIDTH/2-1; pieceLoc[1] = -3;
 						if (heldBlock.id == -1) {
 							heldBlock = shapes.at(0);
 							shapes.erase(shapes.begin());
