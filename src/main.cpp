@@ -20,7 +20,14 @@
 
 #include "shapes.h"
 
+
+
 using namespace ftxui;
+
+const int GAME_WIDTH = 10;
+const int GAME_HEIGHT = 20;
+int GAME_BLOCK_SIZE = 8;
+int GAP_SIZE = GAME_BLOCK_SIZE + 2;
 
 Color colors[7] = {Color::Purple, Color::Yellow1, Color::SkyBlue1, Color::Red, Color::LightGreen, Color::DarkOrange, Color::DarkBlue};
 
@@ -30,21 +37,13 @@ class CoolCanvas : public Canvas {
         {
 
         }
-        void drawGrid(int8_t sizex, int8_t sizey, int8_t x, int8_t y) {
-            int xinc = sizex/x;
-            for (int xAxis = 0; xAxis <= x; xAxis++) {
-                DrawPointLine(xinc*xAxis, 0, xinc*xAxis, 200, Color::Gold1);
-            }
-            for (int yAxis = 0; yAxis <= y; yAxis++) {
-                DrawPointLine(0, yAxis*10, 100, yAxis*10, Color::Red);
-            }
-        }
 
-        int emptyGrids(int game[][10]) {
+
+        int emptyGrids(int game[][GAME_WIDTH]) {
                 int amm = 0;
                 int n = sizeof(game[0]) / sizeof(game[0][0]);
 
-                for (int y = 20; y > 0; y--) {
+                for (int y = GAME_HEIGHT; y > 0; y--) {
 
                     if (std::none_of(game[y], game[y]+n, [](int i) {
                         return i == 0;
@@ -52,7 +51,7 @@ class CoolCanvas : public Canvas {
                         for (int a = y-1; a > 0; a--) {
                             std::copy(std::begin(game[a]), std::end(game[a]), std::begin(game[a+1]));
                         }
-                        y = 20;
+                        y = GAME_HEIGHT;
                         amm++;
                     }
                 }
@@ -76,40 +75,40 @@ class CoolCanvas : public Canvas {
 
 
         void drawBlocks() {
-            for (int y = 0; y < 20; y++) {
-                for (int x = 0; x < 10; x++) 
-                    filledBlock(x*10, y*10, 8, Color::GrayDark);
+            for (int y = 0; y < GAME_HEIGHT; y++) {
+                for (int x = 0; x < GAME_WIDTH; x++) 
+                    filledBlock(x*GAP_SIZE, y*GAP_SIZE, GAME_BLOCK_SIZE, Color::GrayDark);
             }
         }
 
-        void drawGameBlocks(int arr[][10]) {
-            for (int y = 0; y < 20; y++) {
-                for (int x = 0; x < 10; x++) {
+        void drawGameBlocks(int arr[][GAME_WIDTH]) {
+            for (int y = 0; y < GAME_HEIGHT; y++) {
+                for (int x = 0; x < GAME_WIDTH; x++) {
                     if (arr[y][x] != 0)
-                        filledBlock(x*10, y*10, 8, colors[arr[y][x]-1]);
+                        filledBlock(x*GAP_SIZE, y*GAP_SIZE, GAME_BLOCK_SIZE, colors[arr[y][x]-1]);
                 }
             }
         }
 
         void renderPlayerPiece(struct Shape block, int origin[2]) {
-            int piece_x = origin[0]*10;
-            int piece_y = origin[1]*10;
+            int piece_x = origin[0]*GAP_SIZE;
+            int piece_y = origin[1]*GAP_SIZE;
             for (int x = 0; x < 4; x++) {
                 for(int y = 0; y < 4; y++) {
                     if (block.shape[block.rot%4][y][x] != 0) {
-                        filledBlock(piece_x+x*10, piece_y+y*10, 8, colors[block.id-1]);
+                        filledBlock(piece_x+x*GAP_SIZE, piece_y+y*GAP_SIZE, GAME_BLOCK_SIZE, colors[block.id-1]);
                     }
                 }
             }
         }
 
         void renderOutline(struct Shape block, int origin[2]) {
-            int piece_x = origin[0]*10;
-            int piece_y = origin[1]*10;
+            int piece_x = origin[0]*GAP_SIZE;
+            int piece_y = origin[1]*GAP_SIZE;
             for (int x = 0; x < 4; x++) {
                 for(int y = 0; y < 4; y++) {
                     if (block.shape[block.rot%4][y][x] != 0) {
-                        outlineBlock(piece_x+x*10, piece_y+y*10, 8, colors[block.id-1]);
+                        outlineBlock(piece_x+x*GAP_SIZE, piece_y+y*GAP_SIZE, GAME_BLOCK_SIZE, colors[block.id-1]);
                     }
                 }
             }
@@ -135,23 +134,23 @@ struct Shape randomShape() {
     return SHAPES[rand() % 7];
 }
 
-bool pieceHasRoom(struct Shape block, int atOrigin[2], int game[][10]) {
+bool pieceHasRoom(struct Shape block, int atOrigin[2], int game[][GAME_WIDTH]) {
     int start_x = atOrigin[0];
     for (int y = 0; y < 4; y++) {
         for (int x = 0; x < 4; x++) {
-            if (block.shape[block.rot%4][y][x] == 1 && (start_x+x > 9 || start_x+x < 0)) 
+            if (block.shape[block.rot%4][y][x] == 1 && (start_x+x >= GAME_WIDTH || start_x+x < 0)) 
                 return false;
             if (atOrigin[1]+y < 0) {
                 continue;
             }
-            if (block.shape[block.rot%4][y][x] == 1 && (game[atOrigin[1]+y][x+start_x] != 0 || atOrigin[1]+y > 19) )
+            if (block.shape[block.rot%4][y][x] == 1 && (game[atOrigin[1]+y][x+start_x] != 0 || atOrigin[1]+y >= GAME_HEIGHT) )
                 return false;
         }
     }
     return true;
 }
 
-bool dropBlock(struct Shape block, int spot[2], int game[][10]) {
+bool dropBlock(struct Shape block, int spot[2], int game[][GAME_WIDTH]) {
     for (int y = 0; y < 4; y++) {
         for (int x = 0; x < 4; x++) {
             if (block.shape[block.rot%4][y][x] == 1) {
@@ -181,11 +180,11 @@ int main() {
     srand(time(NULL)); // set random seed
     std::vector<struct Shape> shapes = {};
     for (int i = 0; i <= 5; ++i) shapes.push_back(randomShape());
-
+    /* Long blocks will clip out when board and cause instant death when board size is < 7 */
     int scoreValues[5] = {0, 40, 100, 300, 1200};
-    int pieceLoc[2] = {5, -3};
+    int pieceLoc[2] = {(int)GAME_WIDTH/2 - 1, -3};
     int displayPos[2] = {0, 0};
-    int gameArray[20][10] = {0};
+    int gameArray[GAME_HEIGHT][GAME_WIDTH] = {0};
     int frames = 0;
     int score = 0;
     int menu = 0;
@@ -196,7 +195,7 @@ int main() {
     bool hasHeld = 0;
 
     auto screen = ScreenInteractive::FitComponent();
-    auto c = CoolCanvas(98, 200);
+    auto c = CoolCanvas(GAME_WIDTH * GAP_SIZE, GAME_HEIGHT * GAP_SIZE);
     auto blockDisplay = CoolCanvas(14, 12);
     auto blockListDisplay = CoolCanvas(14, 75);
 
@@ -204,9 +203,14 @@ int main() {
 
     auto radiobox = Menu(&menu_entries, &menu, MenuOption::Horizontal());
     auto credits = vbox({
-        text("that sum' for loop - titty") | bold | center,
-        text("holding the L - @knob") | bold | center,
-        text("literally everything else - me") | bold | color(Color::Gold1) | center
+        separatorDashed(), 
+        text("Multi-keybind support - @jwjbadger") | bold | center,
+        separatorDashed(), 
+        text("Rest of the game - @EnjoyYourBan") | bold | color(Color::Gold1) | center,
+        separatorDashed(), 
+        text("Want to contribute?") | center,
+        text("CTRL + Click Here") | hyperlink("https://github.com/EnjoyYourBan/tetris-cli") | center,
+        separatorDashed(), 
     }) | size(WIDTH, EQUAL, 50);
 
     auto held_display = Renderer([&] {
@@ -239,7 +243,7 @@ int main() {
 
                 score += scoreValues[c.emptyGrids(gameArray)];
                 
-                pieceLoc[0] = 5; pieceLoc[1] = -3;
+                pieceLoc[0] = (int)GAME_WIDTH/2-1; pieceLoc[1] = -3;
 
                 currentShape = shapes.at(0);
                 shapes.push_back(randomShape());
@@ -264,7 +268,7 @@ int main() {
 
     }) | CatchEvent([&](Event event) {
         if (menu != 0) return false;
-
+        if (event.is_mouse()) return false;
         // outline of where block will go
         // only needs updated on input
         displayPos[0] = pieceLoc[0]; displayPos[1] = -1;
@@ -311,7 +315,7 @@ int main() {
 					case Controls::hold:
 						if (hasHeld) return true;
 
-						pieceLoc[0] = 5; pieceLoc[1] = -3;
+						pieceLoc[0] = (int)GAME_WIDTH/2-1; pieceLoc[1] = -3;
 						if (heldBlock.id == -1) {
 							heldBlock = shapes.at(0);
 							shapes.erase(shapes.begin());
@@ -334,10 +338,10 @@ int main() {
     
     auto component_renderer = Renderer(game_area, [&] {
         return vbox({
-            separatorLight() | size(WIDTH, EQUAL, 48),
-            text("Score: " + std::to_string(score)) | center | size(WIDTH, EQUAL, 48),
-            radiobox->Render()  | center | size(WIDTH, EQUAL, 48),
-            separatorLight() | flex | size(WIDTH, EQUAL, 48),
+            separatorLight(),
+            text("Score: " + std::to_string(score)) | center,
+            radiobox->Render()  | center,
+            separatorLight() | flex,
             hbox({
                 game_area->Render() | border | flex,
                 vbox({
